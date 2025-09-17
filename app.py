@@ -1,4 +1,3 @@
-
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -30,9 +29,24 @@ if model1_file and model2_file and data_file:
     model1 = joblib.load(model1_file)
     model2 = joblib.load(model2_file)
 
-    # Probe both models
-    coeffs1 = probe_model_function(model1, (X[:, 0].min(), X[:, 0].max()), num_samples=200, degree=5, fixed_features=[0])
-    coeffs2 = probe_model_function(model2, (X[:, 0].min(), X[:, 0].max()), num_samples=200, degree=5, fixed_features=[0])
+    # Probe both models (now passing X_ref to match feature count)
+    coeffs1 = probe_model_function(
+        model1,
+        (X[:, 0].min(), X[:, 0].max()),
+        num_samples=200,
+        degree=5,
+        fixed_features=[0],
+        X_ref=X
+    )
+
+    coeffs2 = probe_model_function(
+        model2,
+        (X[:, 0].min(), X[:, 0].max()),
+        num_samples=200,
+        degree=5,
+        fixed_features=[0],
+        X_ref=X
+    )
 
     # Compute metrics
     static_div = structural_divergence(coeffs1, coeffs2)
