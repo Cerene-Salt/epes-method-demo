@@ -1,76 +1,108 @@
-import streamlit as st
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import joblib
 
-from epes.probe import probe_model_function
-from epes.metrics import structural_divergence, rate_divergence, fusion_metric
+Casa_de_Banho = [
+  "Copo",
+  "Papel Higiênico",
+  "Dispensador de creme e sabão das mãos",
+  "Sabão",
+  "Rede de Banho",
+  "Pepsodente",
+  "Piaçaba",
+  "Toalha de rosto e de banho",
+  "Balde de lixoe e sacos de lixo ",
+  "Gel de Banho",
+  "Champoo e Condicionador",
+  "Detergente pato para a sanita",
+  "Pastilhas para a sanita",
+  "Gel de casa e de banho",
+  "Mum",
+  "Creme para o corpo",
+  "Exfoliante para rosto."
+]
 
-st.set_page_config(page_title="Epe’s Method Audit", layout="centered")
-st.title("🔍 Epe’s Method – Model Comparison Tool")
+Cozinha = [
+  "Pano de Limpeza",
+  "Esponja de louça",
+  "Detergente para louça",
+  "Chaleira",
+  "Prato e Copos",
+  "Talheres",
+  "Sal, pimenta, molhos",
+  "Liquidificador",
+  "Vassoura e pá",
+  "Esfregona e Balde",
+  "Saco de lixo."
+]
 
-st.markdown("""
-Upload two trained scikit-learn models and a dataset to compare their behavior using custom divergence metrics.
-""")
+while len(Cozinha) != Casa_de_Banho:
+  Cozinha.append("")
+  if len(Cozinha) == len(Casa_de_Banho):
+    print("Done")
+    break
 
-# Upload section
-model1_file = st.file_uploader("📁 Upload Model 1 (.pkl)", type=["pkl"])
-model2_file = st.file_uploader("📁 Upload Model 2 (.pkl)", type=["pkl"])
-data_file = st.file_uploader("📄 Upload Dataset (.csv)", type=["csv"])
+ 
 
-if model1_file and model2_file and data_file:
-    # Load data
-    df = pd.read_csv(data_file)
-    X = df.iloc[:, :-1].values
-    y = df.iloc[:, -1].values
 
-    # Load models
-    model1 = joblib.load(model1_file)
-    model2 = joblib.load(model2_file)
+Quarto = [
+  "Lençõis",
+  "Endredões",
+  "Almofadas",
+  "Balde de lixo",
+  "Tapete",
+  "Cabides",
+  "Ficha Tripla",
+  "Picos para quadro de anotações",
+  "Ambiente."
+]
 
-    # Probe both models (now passing X_ref to match feature count)
-    coeffs1 = probe_model_function(
-        model1,
-        (X[:, 0].min(), X[:, 0].max()),
-        num_samples=200,
-        degree=5,
-        fixed_features=[0],
-        X_ref=X
-    )
 
-    coeffs2 = probe_model_function(
-        model2,
-        (X[:, 0].min(), X[:, 0].max()),
-        num_samples=200,
-        degree=5,
-        fixed_features=[0],
-        X_ref=X
-    )
 
-    # Compute metrics
-    static_div = structural_divergence(coeffs1, coeffs2)
-    f_prime_coeffs = np.array([i * coeffs1[i] for i in range(1, len(coeffs1))])
-    g_prime_coeffs = np.array([i * coeffs2[i] for i in range(1, len(coeffs2))])
-    rate_div = rate_divergence(f_prime_coeffs, g_prime_coeffs)
-    fusion = fusion_metric(static_div, rate_div)
 
-    # Display metrics
-    st.subheader("📊 Divergence Metrics")
-    st.metric("Static Divergence (ϝ)", f"{static_div:.4f}")
-    st.metric("Rate Divergence (δϝ)", f"{rate_div:.4f}")
-    st.metric("Fusion Metric (ϝ*)", f"{fusion:.4f}")
+Comida = [
+  "Legumes",
+  "Fruta",
+  "Taparões",
+  "Panelas",
+  "Frigideira."
+]
 
-    # Plot 1D slice
-    st.subheader("📈 1D Slice Plot")
-    x_vals = np.linspace(X[:, 0].min(), X[:, 0].max(), 200)
-    y1_vals = np.polyval(coeffs1[::-1], x_vals)
-    y2_vals = np.polyval(coeffs2[::-1], x_vals)
+while len(Comida) != len(Quarto):
+  Comida.append("")
+  if len(Comida) == len(Quarto):
+    print("Done also.")
+    print(len(Comida))
+    break
 
-    fig, ax = plt.subplots()
-    ax.plot(x_vals, y1_vals, label="Model 1", color="blue")
-    ax.plot(x_vals, y2_vals, label="Model 2", color="orange")
-    ax.set_xlabel("Feature 1")
-    ax.set_ylabel("Predicted Output")
-    ax.legend()
-    st.pyplot(fig)
+
+
+Lista_de_compras = {
+   "Casa_de_Banho":Casa_de_Banho,
+   "Cozinha":Cozinha,
+   "Quarto":Quarto,
+   "Comida":Comida
+}
+
+while len(Quarto) != len(Casa_de_Banho):
+  Quarto.append("")
+  if len(Quarto) == len(Casa_de_Banho):
+    print("Done finally.")
+    break
+
+#checking
+print(len(Quarto))
+print(len(Cozinha))
+#If one is different
+while len(Comida) != len(Casa_de_Banho):
+  Comida.append("")
+  if len(Comida) == len(Casa_de_Banho):
+    print("Completed")
+
+#checking
+print(len(Quarto))
+print(len(Cozinha))
+print(len(Comida))
+
+df = pd.DataFrame(Lista_de_compras)
+
+plot.)
